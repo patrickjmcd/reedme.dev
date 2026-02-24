@@ -1,10 +1,5 @@
 import { Badge } from '@/components/ui/badge';
 import { CodeBlock } from '@/components/common/CodeBlock';
-import type { Page } from '@/types';
-
-interface HomePageProps {
-  onNavigate: (page: Page) => void;
-}
 
 const FEATURES = [
   {
@@ -39,7 +34,7 @@ const DOCKER_QUICK_START = `docker run -it -d -p 8080:8080 \\
   -e REEDME_PASSWORD="reedme" \\
   ghcr.io/patrickjmcd/reedme:latest`;
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero */}
@@ -56,12 +51,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => onNavigate('installation')}
+          <a
+            href="#installation"
             className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
           >
             Get Started
-          </button>
+          </a>
           <a
             href="https://github.com/patrickjmcd/reedme"
             target="_blank"
@@ -113,12 +108,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <CodeBlock code={DOCKER_QUICK_START} language="shell" />
         <p className="text-sm text-muted-foreground">
           For other installation options see the{' '}
-          <button
-            onClick={() => onNavigate('installation')}
-            className="text-primary underline underline-offset-2 hover:no-underline"
-          >
+          <a href="#installation" className="text-primary underline underline-offset-2 hover:no-underline">
             Installation guide
-          </button>
+          </a>
           .
         </p>
       </section>

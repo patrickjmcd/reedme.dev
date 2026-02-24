@@ -24,19 +24,13 @@ interface SidebarProps {
   current: Page;
   open: boolean;
   onClose: () => void;
-  onNavigate: (page: Page) => void;
 }
 
-export function Sidebar({ current, open, onClose, onNavigate }: SidebarProps) {
-  function handleNavigate(page: Page) {
-    onNavigate(page);
-    onClose();
-  }
-
+export function Sidebar({ current, open, onClose }: SidebarProps) {
   const navContent = (
     <>
       {NAV_ITEMS.filter((i) => !i.group).map((item) => (
-        <NavLink key={item.id} item={item} current={current} onNavigate={handleNavigate} />
+        <NavLink key={item.id} item={item} current={current} onClose={onClose} />
       ))}
       {GROUPS.map((group) => (
         <div key={group} className="mt-4">
@@ -44,7 +38,7 @@ export function Sidebar({ current, open, onClose, onNavigate }: SidebarProps) {
             {group}
           </p>
           {NAV_ITEMS.filter((i) => i.group === group).map((item) => (
-            <NavLink key={item.id} item={item} current={current} onNavigate={handleNavigate} />
+            <NavLink key={item.id} item={item} current={current} onClose={onClose} />
           ))}
         </div>
       ))}
@@ -77,26 +71,19 @@ export function Sidebar({ current, open, onClose, onNavigate }: SidebarProps) {
   );
 }
 
-function NavLink({
-  item,
-  current,
-  onNavigate,
-}: {
-  item: NavItem;
-  current: Page;
-  onNavigate: (page: Page) => void;
-}) {
+function NavLink({ item, current, onClose }: { item: NavItem; current: Page; onClose: () => void }) {
   return (
-    <button
-      onClick={() => onNavigate(item.id)}
+    <a
+      href={item.id === 'home' ? '#' : `#${item.id}`}
+      onClick={onClose}
       className={clsx(
-        'w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors',
+        'block px-3 py-1.5 rounded-md text-sm transition-colors',
         current === item.id
           ? 'bg-accent text-accent-foreground font-medium'
           : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
       )}
     >
       {item.label}
-    </button>
+    </a>
   );
 }

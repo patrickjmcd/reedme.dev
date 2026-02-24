@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { HomePage } from '@/components/docs/HomePage';
@@ -11,10 +11,20 @@ import { ContributingPage } from '@/components/docs/ContributingPage';
 import { ChangelogPage } from '@/components/docs/ChangelogPage';
 import type { Page } from '@/types';
 
-function PageContent({ page, onNavigate }: { page: Page; onNavigate: (p: Page) => void }) {
+const PAGES = new Set<Page>([
+  'home', 'installation', 'configuration', 'database',
+  'keyboard-shortcuts', 'api', 'contributing', 'changelog',
+]);
+
+function hashToPage(): Page {
+  const hash = window.location.hash.slice(1) as Page;
+  return PAGES.has(hash) ? hash : 'home';
+}
+
+function PageContent({ page }: { page: Page }) {
   switch (page) {
     case 'home':
-      return <HomePage onNavigate={onNavigate} />;
+      return <HomePage />;
     case 'installation':
       return <InstallationPage />;
     case 'configuration':
@@ -33,13 +43,17 @@ function PageContent({ page, onNavigate }: { page: Page; onNavigate: (p: Page) =
 }
 
 export default function App() {
-  const [page, setPage] = useState<Page>('home');
+  const [page, setPage] = useState<Page>(hashToPage);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  function navigate(p: Page) {
-    setPage(p);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  useEffect(() => {
+    const handler = () => {
+      setPage(hashToPage());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -48,11 +62,10 @@ export default function App() {
         current={page}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        onNavigate={navigate}
       />
       <main className="md:ml-56 pt-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
-          <PageContent page={page} onNavigate={navigate} />
+          <PageContent page={page} />
         </div>
         <footer className="border-t border-border">
           <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6 text-sm text-muted-foreground">
