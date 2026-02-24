@@ -54,6 +54,11 @@ export default function App() {
         <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
           <PageContent page={page} onNavigate={navigate} />
         </div>
+        <footer className="border-t border-border">
+          <div className="max-w-3xl mx-auto px-4 sm:px-8 py-6 text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Patrick McDonagh. MIT License.
+          </div>
+        </footer>
       </main>
     </div>
   );
