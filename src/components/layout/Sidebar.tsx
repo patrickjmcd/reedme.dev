@@ -18,35 +18,62 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'changelog', label: 'Changelog', group: 'Development' },
 ];
 
+const GROUPS = ['Getting Started', 'Usage', 'Development'];
+
 interface SidebarProps {
   current: Page;
+  open: boolean;
+  onClose: () => void;
   onNavigate: (page: Page) => void;
 }
 
-export function Sidebar({ current, onNavigate }: SidebarProps) {
-  const groups = ['Getting Started', 'Usage', 'Development'];
+export function Sidebar({ current, open, onClose, onNavigate }: SidebarProps) {
+  function handleNavigate(page: Page) {
+    onNavigate(page);
+    onClose();
+  }
+
+  const navContent = (
+    <>
+      {NAV_ITEMS.filter((i) => !i.group).map((item) => (
+        <NavLink key={item.id} item={item} current={current} onNavigate={handleNavigate} />
+      ))}
+      {GROUPS.map((group) => (
+        <div key={group} className="mt-4">
+          <p className="px-3 mb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            {group}
+          </p>
+          {NAV_ITEMS.filter((i) => i.group === group).map((item) => (
+            <NavLink key={item.id} item={item} current={current} onNavigate={handleNavigate} />
+          ))}
+        </div>
+      ))}
+    </>
+  );
 
   return (
-    <aside className="fixed top-14 left-0 bottom-0 w-56 border-r border-border bg-background overflow-y-auto py-6 px-3">
-      {/* Overview (no group) */}
-      {NAV_ITEMS.filter((i) => !i.group).map((item) => (
-        <NavLink key={item.id} item={item} current={current} onNavigate={onNavigate} />
-      ))}
+    <>
+      {/* Mobile backdrop */}
+      {open && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
 
-      {groups.map((group) => {
-        const items = NAV_ITEMS.filter((i) => i.group === group);
-        return (
-          <div key={group} className="mt-4">
-            <p className="px-3 mb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {group}
-            </p>
-            {items.map((item) => (
-              <NavLink key={item.id} item={item} current={current} onNavigate={onNavigate} />
-            ))}
-          </div>
-        );
-      })}
-    </aside>
+      {/* Sidebar panel */}
+      <aside
+        className={clsx(
+          'fixed top-14 left-0 bottom-0 z-40 w-56 border-r border-border bg-background overflow-y-auto py-6 px-3 transition-transform duration-200',
+          // Mobile: slide in/out
+          'md:translate-x-0',
+          open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+        )}
+      >
+        {navContent}
+      </aside>
+    </>
   );
 }
 

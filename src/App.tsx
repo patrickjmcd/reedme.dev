@@ -34,6 +34,7 @@ function PageContent({ page, onNavigate }: { page: Page; onNavigate: (p: Page) =
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   function navigate(p: Page) {
     setPage(p);
@@ -42,10 +43,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
-      <Sidebar current={page} onNavigate={navigate} />
-      <main className="ml-56 pt-14">
-        <div className="max-w-3xl mx-auto px-8 py-10">
+      <Header onMenuClick={() => setSidebarOpen((o) => !o)} />
+      <Sidebar
+        current={page}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onNavigate={navigate}
+      />
+      <main className="md:ml-56 pt-14">
+        <div className="max-w-3xl mx-auto px-4 sm:px-8 py-10">
           <PageContent page={page} onNavigate={navigate} />
         </div>
       </main>
