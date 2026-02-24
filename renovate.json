@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "schedule": ["before 6am on Monday"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["react", "react-dom", "@types/react", "@types/react-dom"],
+      "groupName": "React"
+    },
+    {
+      "matchPackageNames": ["vite", "@vitejs/plugin-react", "babel-plugin-react-compiler"],
+      "groupName": "Vite"
+    },
+    {
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/vite", "tw-animate-css"],
+      "groupName": "Tailwind CSS"
+    },
+    {
+      "matchPackageNames": ["typescript", "typescript-eslint", "@eslint/js", "eslint", "eslint-plugin-react-hooks", "eslint-plugin-react-refresh", "globals"],
+      "groupName": "TypeScript / ESLint"
+    }
+  ]
+}
