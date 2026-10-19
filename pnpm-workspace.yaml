@@ -1,0 +1,4 @@
+# pnpm 12 fails the install unless every dependency with a build script is
+# explicitly allowed or denied here.
+allowBuilds:
+  esbuild: true
